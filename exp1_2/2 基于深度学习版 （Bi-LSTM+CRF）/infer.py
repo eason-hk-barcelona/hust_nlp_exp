@@ -4,11 +4,11 @@ import argparse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epoch', type=int, default=9)
+    parser.add_argument('--epoch', type=int, default=19)
     args = parser.parse_args()
 
     # 加载指定epoch的模型
-    model_path = f'save/model_epoch{args.epoch}.pkl'
+    model_path = f'save/best_model.pkl'
     print(f"加载模型: {model_path}")
     model = torch.load(model_path, map_location=torch.device('cpu'))
 
