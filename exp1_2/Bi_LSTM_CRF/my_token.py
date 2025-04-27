@@ -6,7 +6,7 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # 使用本地下载好的模型路径
-model_path = os.path.join(current_dir, "small")
+model_path = os.path.join(current_dir, "base1")
 print(f"加载本地模型: {model_path}")
 
 ltp = LTP(model_path) 
