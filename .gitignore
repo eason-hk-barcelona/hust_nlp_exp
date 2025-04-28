@@ -1,0 +1,35 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Model files and large data
+*.pkl
+save/
+*.pt
+*.pth
+*.h5
+
+# PyCharm settings
+.idea/
+
+# Large data files
+*.txt.bak
+dict.txt
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Virtual environment
+venv/
+env/
+.env/
+
+# Other temporary files
+*.log
+*.swp
+*~ 

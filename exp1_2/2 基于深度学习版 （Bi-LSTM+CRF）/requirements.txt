@@ -1,2 +1,4 @@
 pytorch-crf
 scikit-learn
+transformers>=4.18.0
+torch>=1.10.0
