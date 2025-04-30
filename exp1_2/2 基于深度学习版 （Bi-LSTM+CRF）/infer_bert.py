@@ -59,18 +59,16 @@ def batch_inference(model, tokenizer, texts, id2tag, batch_size=16):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_path', type=str, default='save/best_bert_model.pkl')
+    parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda'], help='设备选择：cpu或cuda')
     args = parser.parse_args()
 
-    # Load the saved model
-    print(f"Loading model: {args.model_path}")
-    model = torch.load(args.model_path, map_location=torch.device('cpu'))
-    model.eval()
+    device = torch.device(args.device if args.device == 'cuda' and torch.cuda.is_available() else 'cpu')
+    print(f"使用设备: {device}")
+    model = torch.load(args.model_path, map_location=device)
+    model.to(device)
 
     # Load the BERT tokenizer
     tokenizer = BertTokenizerFast.from_pretrained('bert-base-chinese')
-
-    # Open output file for writing results
-    output = open('cws_result_bert.txt', 'w', encoding='utf-8')
 
     # Load the tag mappings
     with open('data/datasave.pkl', 'rb') as inp:

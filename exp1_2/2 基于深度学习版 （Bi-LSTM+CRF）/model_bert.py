@@ -10,7 +10,7 @@ class BertCWS(nn.Module):
         self.tagset_size = len(tag2id)
         
         # Load pre-trained BERT model
-        self.bert = BertModel.from_pretrained('bert-base-chinese')
+        self.bert = BertModel.from_pretrained('hfl/chinese-roberta-wwm-ext')
         
         # Dropout for regularization
         self.dropout = nn.Dropout(dropout)
@@ -40,9 +40,15 @@ class BertCWS(nn.Module):
         # 合并注意力掩码和有效标签掩码
         mask = attention_mask & valid_tags_mask
         
-        # 确保第一个时间步的掩码全部为1，这是CRF要求的
+        # 只将第一个有效token位置设为1
+        valid_lengths = attention_mask.sum(dim=1)
         batch_size = mask.size(0)
-        mask[:, 0] = torch.ones(batch_size, dtype=torch.bool, device=mask.device)
+        for i in range(batch_size):
+            # 将第一个有效位置设为1，可能不是位置0
+            for j in range(mask.size(1)):
+                if attention_mask[i, j]:
+                    mask[i, j] = True
+                    break
         
         # 处理CRF输入的标签，将-100替换为0，CRF会根据mask忽略这些位置
         crf_tags = tags.clone()

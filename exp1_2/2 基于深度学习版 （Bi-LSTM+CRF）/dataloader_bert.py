@@ -34,20 +34,18 @@ class BertSentence(Dataset):
         word_ids = encoding.word_ids(batch_index=0)
 
         # 标签对齐 - 改进版
-        labels = torch.ones(len(word_ids), dtype=torch.long) * -100  # 使用-100作为忽略索引
-        tag_idx = 0
+        labels = torch.ones(len(word_ids), dtype=torch.long) * -100
+        previous_word_id = None
         for i, word_id in enumerate(word_ids):
-            # 跳过特殊标记和None值
-            if word_id is None or word_id >= len(tags):
-                continue
-            
-            # 只为每个原始字符的第一个token分配标签
-            if i > 0 and word_id == word_ids[i-1]:
+            if word_id is None:
                 continue
                 
-            if tag_idx < len(tags):
-                labels[i] = tags[tag_idx]
-                tag_idx += 1
+            if word_id >= len(tags):
+                break
+                
+            if word_id != previous_word_id:  # 新字的第一个token
+                labels[i] = tags[word_id]
+                previous_word_id = word_id
         
         return {
             'input_ids': input_ids,

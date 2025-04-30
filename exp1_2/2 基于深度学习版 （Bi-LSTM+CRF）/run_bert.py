@@ -5,7 +5,7 @@ import os
 import torch
 from torch.utils.data import DataLoader
 from torch.optim import AdamW
-from transformers import get_linear_schedule_with_warmup
+from transformers import get_cosine_schedule_with_warmup
 from model_bert import BertCWS
 from dataloader_bert import BertSentence
 
@@ -192,10 +192,11 @@ def main(args):
     total_steps = len(train_dataloader) * args.max_epoch
     
     # Create learning rate scheduler
-    scheduler = get_linear_schedule_with_warmup(
-        optimizer, 
-        num_warmup_steps=args.warmup_steps, 
-        num_training_steps=total_steps
+    scheduler = get_cosine_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=args.warmup_steps,
+        num_training_steps=total_steps,
+        num_cycles=0.5  # 半周期余弦
     )
 
     # Track best model performance
